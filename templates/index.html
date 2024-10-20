@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baixar Músicas do YouTube</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .message {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Baixar Músicas do YouTube</h1>
+    <input type="text" id="youtube-link" placeholder="Insira o link do YouTube">
+    <button onclick="baixarMusica()">Baixar Música</button>
+    <div class="message" id="message"></div>
+</div>
+
+<script>
+    function baixarMusica() {
+        const link = document.getElementById('youtube-link').value;
+        const messageDiv = document.getElementById('message');
+
+        if (link === '') {
+            messageDiv.textContent = "Por favor, insira um link.";
+            messageDiv.style.color = "red";
+            return;
+        }
+
+        fetch('/baixar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ link: link })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                messageDiv.textContent = data.error;
+                messageDiv.style.color = "red";
+            } else {
+                messageDiv.textContent = data.message;
+                messageDiv.style.color = "green";
+            }
+        })
+        .catch(error => {
+            messageDiv.textContent = "Ocorreu um erro: " + error;
+            messageDiv.style.color = "red";
+        });
+    }
+</script>
+
+</body>
+</html>
